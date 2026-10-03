@@ -893,8 +893,8 @@ body {
 </div>
 
 <script>
-    // URL DE TU GOOGLE APPS SCRIPT INTEGRADA
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHvpRjxEpLvR5x1MRWgxNT-ZHhV3BTAMW0QTnNfJSMap8ce1oWzCBNdcxxGZxbi1uS/exec';
+    // URL ACTUALIZADA DE GOOGLE APPS SCRIPT
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx_Mtgjm1j2GpFQW-jlgNnwrOlj_u4laz_r-4uY9fNz8DGTA0fxFYeo2e2Zljugcb8/exec';
 
     // FOTOS DE LA POSADA
     const posadaImages = [
@@ -968,14 +968,14 @@ body {
             feedback: document.getElementById('guest-feedback').value || 'Sin comentarios.'
         };
 
-        // 1. Enviar datos a Google Sheets mediante Webhook
+        // Enviar a Google Sheets
         fetch(SCRIPT_URL, {
             method: 'POST',
             mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify(payload)
         }).then(() => {
-            // 2. Registrar localmente para actualizar el tablero
+            // Actualizar interfaz local
             surveyResponses.push({
                 name: payload.name,
                 room: payload.room,
@@ -986,13 +986,13 @@ body {
             });
 
             updateDashboard();
-            alert('¡Muchas gracias por completar la encuesta! Tus respuestas han sido enviadas exitosamente a la administración.');
+            alert('¡Muchas gracias por completar la encuesta! Tus respuestas han sido registradas exitosamente.');
 
             const tableroBtn = document.querySelectorAll('.tab-btn')[1];
             switchTab('tablero', tableroBtn);
             document.getElementById('seccion-encuesta').reset();
         }).catch(err => {
-            alert('Ocurrió un error al enviar la respuesta. Por favor inténtalo nuevamente.');
+            alert('Ocurrió un error al procesar el envío. Por favor inténtalo nuevamente.');
             console.error(err);
         });
     }
