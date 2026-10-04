@@ -893,8 +893,8 @@ body {
 </div>
 
 <script>
-    // URL DE GOOGLE APPS SCRIPT ACTUALIZADA
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwH6RHDJiosr1HuZY8yOoBZFS_mUzfMKPVV2KzjrJ0NobIdBdcivGozlMlpCahf0VSr/exec';
+    // PEGA AQUÍ TU NUEVA URL DE GOOGLE APPS SCRIPT
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzehhsHLHGNep4n-DcByFBHVdoA1YHJp_jyrWOpXmmiqmxHHennWvEEhekiDmjmZszm/exec';
 
     // FOTOS DE LA POSADA
     const posadaImages = [
@@ -946,7 +946,7 @@ body {
         alert('¡Enlace copiado al portapapeles!\n\nAl compartirlo con los huéspedes, los llevará directamente a responder la encuesta.');
     }
 
-    // ENVÍO DE RESPUESTAS A GOOGLE SHEETS Y TABLERO
+    // ENVÍO DE RESPUESTAS A GOOGLE SHEETS EN FORM-URLENCODED (SIN CORSED LOCK)
     function submitSurvey(event) {
         event.preventDefault();
 
@@ -955,38 +955,36 @@ body {
             return selected ? selected.getAttribute('data-val') : 'N/A';
         };
 
-        const payload = {
-            name: document.getElementById('guest-name').value || 'Huésped Anónimo',
-            reason: document.getElementById('guest-reason').value || 'N/A',
-            room: document.getElementById('guest-room').value || 'Habitación General',
-            csat: getSelectedVal('q1-block'),
-            servqual: getSelectedVal('q2-block'),
-            ctqTime: getSelectedVal('q3-block'),
-            ctqQuality: getSelectedVal('q4-block'),
-            confidence: getSelectedVal('q5-block'),
-            nps: getSelectedVal('q6-block'),
-            feedback: document.getElementById('guest-feedback').value || 'Sin comentarios.'
-        };
+        const formData = new URLSearchParams();
+        formData.append('name', document.getElementById('guest-name').value || 'Huésped Anónimo');
+        formData.append('reason', document.getElementById('guest-reason').value || 'N/A');
+        formData.append('room', document.getElementById('guest-room').value || 'Habitación General');
+        formData.append('csat', getSelectedVal('q1-block'));
+        formData.append('servqual', getSelectedVal('q2-block'));
+        formData.append('ctqTime', getSelectedVal('q3-block'));
+        formData.append('ctqQuality', getSelectedVal('q4-block'));
+        formData.append('confidence', getSelectedVal('q5-block'));
+        formData.append('nps', getSelectedVal('q6-block'));
+        formData.append('feedback', document.getElementById('guest-feedback').value || 'Sin comentarios.');
 
-        // Enviar a Google Sheets
+        // Enviar vía URLSearchParams
         fetch(SCRIPT_URL, {
             method: 'POST',
             mode: 'no-cors',
-            headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify(payload)
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: formData.toString()
         }).then(() => {
-            // Actualizar interfaz local
             surveyResponses.push({
-                name: payload.name,
-                room: payload.room,
-                csat: parseInt(payload.csat) || 5,
-                servqual: parseInt(payload.servqual) || 5,
-                nps: parseInt(payload.nps) || 10,
-                feedback: payload.feedback
+                name: document.getElementById('guest-name').value || 'Huésped Anónimo',
+                room: document.getElementById('guest-room').value || 'Habitación General',
+                csat: parseInt(getSelectedVal('q1-block')) || 5,
+                servqual: parseInt(getSelectedVal('q2-block')) || 5,
+                nps: parseInt(getSelectedVal('q6-block')) || 10,
+                feedback: document.getElementById('guest-feedback').value || 'Sin comentarios.'
             });
 
             updateDashboard();
-            alert('¡Muchas gracias por completar la encuesta! Tus respuestas han sido registradas exitosamente.');
+            alert('¡Muchas gracias por completar la encuesta! Tus respuestas han sido enviadas a la hoja de Google.');
 
             const tableroBtn = document.querySelectorAll('.tab-btn')[1];
             switchTab('tablero', tableroBtn);
