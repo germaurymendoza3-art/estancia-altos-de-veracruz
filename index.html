@@ -567,4 +567,486 @@ body {
     background-color: var(--naranja-logo);
 }
 
-.admin
+.admin-table-container {
+    margin-top: 30px;
+    border-top: 1px solid #f0eae1;
+    padding-top: 25px;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 0.85rem;
+}
+
+.admin-table th, .admin-table td {
+    border: 1px solid var(--borde-suave);
+    padding: 10px;
+    text-align: left;
+}
+
+.admin-table th {
+    background-color: var(--crema-fondo);
+    color: var(--verde-logo);
+    font-weight: 700;
+}
+</style>
+
+<!-- ESTRUCTURA DEL DOCUMENTO -->
+<div class="container">
+    <div class="top-subheading">SANARE · ESTADO LARA / VENEZUELA / SISTEMA DE CALIDAD TURÍSTICA</div>
+
+    <div class="header-main">
+        <div class="brand-header">
+            <span class="sub-brand">ESTANCIA</span>
+            <h1 class="main-title">ALTOS <span>DE</span> VERACRUZ</h1>
+            <span class="location-brand">S A N A R E</span>
+            <div class="subtitle">Sistema de satisfacción del cliente</div>
+        </div>
+        <div class="header-quote">
+            «Altos de Veracruz es una excelente opción como estancia para descansar y disfrutar»
+        </div>
+    </div>
+
+    <!-- PESTAÑAS DE NAVEGACIÓN -->
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('encuesta', this)">📝 Encuesta de Cliente</button>
+        <button class="tab-btn" onclick="switchTab('tablero', this)">📊 Tablero de Resultados</button>
+    </div>
+
+    <!-- MODAL DE ENLACE GENERADO -->
+    <div id="code-modal" class="code-modal">
+        <h3>¡Enlace de Encuesta Generado!</h3>
+        <p style="font-size: 0.85rem; color: #666;">Comparte este enlace directo con tus huéspedes para llevarlos directamente a completar la encuesta:</p>
+        <div id="code-display" class="code-box">https://germaurymendoza3-art.github.io/estancia-altos-de-veracruz/#seccion-encuesta</div>
+        <button class="btn-continue" onclick="copyCode()">Copiar Enlace al Portapapeles</button>
+    </div>
+
+    <!-- PESTAÑA 1: ENCUESTA DE SATISFACCIÓN -->
+    <div id="encuesta" class="tab-content active">
+        <!-- Banner Principal -->
+        <div class="hero-banner" id="hero-banner">
+            <div class="hero-overlay">
+                <div class="hero-top-bar">
+                    <a href="https://www.google.com/maps/place/ESTANCIA+ALTOS+DE+VERACRUZ/@9.7269075,-69.6552944,17z/data=!4m9!3m8!1s0x8e7d9de5f3539631:0x9935ecef96088bac!5m2!4m1!1i2!8m2!3d9.7269075!4d-69.6527195!16s%2Fg%2F11b5wmshgs?entry=ttu" target="_blank" class="location-tag">
+                        📍 Sanare · Edo. Lara (Google Maps)
+                    </a>
+                    <button class="btn-upload-photo" onclick="changeHeroImage()">📷 Cargar foto</button>
+                </div>
+                <div class="hero-bottom-bar">
+                    <div class="hero-text">
+                        <div class="brand-tag">ESTANCIA ALTOS DE VERACRUZ</div>
+                        <p>Un refugio diseñado para el reposo del alma, donde cada rincón en piedra y madera honra la calidez de Sanare.</p>
+                    </div>
+                    <div class="hero-actions">
+                        <button class="btn-start-survey" onclick="document.getElementById('seccion-encuesta').scrollIntoView({behavior: 'smooth'})">
+                            Comenzar Encuesta →
+                        </button>
+                        <button class="btn-share-code" onclick="generateShareCode()">
+                            <span>📱</span> Código para Compartir
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Galería Secundaria -->
+        <div class="secondary-banner">
+            <img id="secondary-img" src="https://paxer.com/static/production/HOI/2/288/13020/hash-5vww4xsoSg-paxer.jpg" alt="Vista Panorámica Estancia Altos de Veracruz">
+            <div class="secondary-banner-caption">
+                Vista panorámica de nuestras instalaciones y entorno natural en Sanare.
+            </div>
+        </div>
+
+        <!-- Formulario de Encuesta -->
+        <form class="survey-card" id="seccion-encuesta" onsubmit="submitSurvey(event)">
+            
+            <!-- Datos Opcionales -->
+            <div class="info-box">
+                <div class="info-box-title">INFORMACIÓN DE LA ESTANCIA (OPCIONAL)</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nombre o Familia</label>
+                        <input type="text" id="guest-name" placeholder="Ej. Familia Rodríguez">
+                    </div>
+                    <div class="form-group">
+                        <label>Motivo de Estancia</label>
+                        <select id="guest-reason">
+                            <option>Descanso y relax</option>
+                            <option>Turismo / Vacaciones</option>
+                            <option>Trabajo / Evento</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Habitación o Área</label>
+                        <input type="text" id="guest-room" value="Suite Mirador">
+                    </div>
+                </div>
+            </div>
+
+            <!-- PREGUNTA 1: CSAT -->
+            <div class="question-block" id="q1-block">
+                <div class="question-header">
+                    <div class="question-number">1</div>
+                    <div>
+                        <div class="question-title">SATISFACCIÓN GLOBAL (CSAT)</div>
+                        <div class="question-subtitle">¿Qué tan satisfecho estás con nuestra empresa?</div>
+                    </div>
+                </div>
+                <div class="options-grid-5">
+                    <div class="option-card" data-val="5" onclick="selectOption(this)"><span class="icon">😊</span><div class="label">Muy satisfecho</div></div>
+                    <div class="option-card" data-val="4" onclick="selectOption(this)"><span class="icon">🙂</span><div class="label">Satisfecho</div></div>
+                    <div class="option-card" data-val="3" onclick="selectOption(this)"><span class="icon">😐</span><div class="label">Neutral</div></div>
+                    <div class="option-card" data-val="2" onclick="selectOption(this)"><span class="icon">🙁</span><div class="label">Insatisfecho</div></div>
+                    <div class="option-card" data-val="1" onclick="selectOption(this)"><span class="icon">😞</span><div class="label">Muy insatisfecho</div></div>
+                </div>
+            </div>
+
+            <!-- PREGUNTA 2: SERVQUAL -->
+            <div class="question-block" id="q2-block">
+                <div class="question-header">
+                    <div class="question-number">2</div>
+                    <div>
+                        <div class="question-title">EXPECTATIVA VS REALIDAD (BRECHA SERVQUAL)</div>
+                        <div class="question-subtitle">¿Cómo calificarías el cumplimiento de lo que prometimos vs lo que recibiste?</div>
+                    </div>
+                </div>
+                <div class="options-grid-5">
+                    <div class="option-card" data-val="1" onclick="selectOption(this)"><div class="number-val">1</div><div class="label">Mucho peor</div></div>
+                    <div class="option-card" data-val="2" onclick="selectOption(this)"><div class="number-val">2</div><div class="label">Inferior</div></div>
+                    <div class="option-card" data-val="3" onclick="selectOption(this)"><div class="number-val">3</div><div class="label">Igual a lo esperado</div></div>
+                    <div class="option-card" data-val="4" onclick="selectOption(this)"><div class="number-val">4</div><div class="label">Mejor</div></div>
+                    <div class="option-card" data-val="5" onclick="selectOption(this)"><div class="number-val">5</div><div class="label">Mucho mejor</div></div>
+                </div>
+            </div>
+
+            <!-- PREGUNTA 3: CTQ TIEMPO -->
+            <div class="question-block" id="q3-block">
+                <div class="question-header">
+                    <div class="question-number">3</div>
+                    <div>
+                        <div class="question-title">CTQ: TIEMPO (FIABILIDAD)</div>
+                        <div class="question-subtitle">¿Recibiste tu producto/servicio en el tiempo acordado?</div>
+                    </div>
+                </div>
+                <div class="options-grid-5">
+                    <div class="option-card" data-val="Sí, siempre" onclick="selectOption(this)"><div class="label">Sí, siempre</div></div>
+                    <div class="option-card" data-val="Casi siempre" onclick="selectOption(this)"><div class="label">Casi siempre</div></div>
+                    <div class="option-card" data-val="A veces" onclick="selectOption(this)"><div class="label">A veces</div></div>
+                    <div class="option-card" data-val="Rara vez" onclick="selectOption(this)"><div class="label">Rara vez</div></div>
+                    <div class="option-card" data-val="No" onclick="selectOption(this)"><div class="label">No</div></div>
+                </div>
+            </div>
+
+            <!-- PREGUNTA 4: CTQ CALIDAD -->
+            <div class="question-block" id="q4-block">
+                <div class="question-header">
+                    <div class="question-number">4</div>
+                    <div>
+                        <div class="question-title">CTQ: CALIDAD (TANGIBLES)</div>
+                        <div class="question-subtitle">Calidad del producto/servicio durante tu estancia</div>
+                    </div>
+                </div>
+                <div class="options-grid-5">
+                    <div class="option-card" data-val="1" onclick="selectOption(this)"><div class="number-val">1</div><div class="label">Muy mala</div></div>
+                    <div class="option-card" data-val="2" onclick="selectOption(this)"><div class="number-val">2</div><div class="label">Mala</div></div>
+                    <div class="option-card" data-val="3" onclick="selectOption(this)"><div class="number-val">3</div><div class="label">Regular</div></div>
+                    <div class="option-card" data-val="4" onclick="selectOption(this)"><div class="number-val">4</div><div class="label">Buena</div></div>
+                    <div class="option-card" data-val="5" onclick="selectOption(this)"><div class="number-val">5</div><div class="label">Excelente</div></div>
+                </div>
+            </div>
+
+            <!-- PREGUNTA 5: CONFIANZA -->
+            <div class="question-block" id="q5-block">
+                <div class="question-header">
+                    <div class="question-number">5</div>
+                    <div>
+                        <div class="question-title">CONFIANZA (SEGURIDAD)</div>
+                        <div class="question-subtitle">¿Sientes que podemos resolver un problema si ocurre?</div>
+                    </div>
+                </div>
+                <div class="options-grid-5">
+                    <div class="option-card" data-val="1" onclick="selectOption(this)"><div class="number-val">1</div><div class="label">Nada de confianza</div></div>
+                    <div class="option-card" data-val="2" onclick="selectOption(this)"><div class="number-val">2</div><div class="label">Poca confianza</div></div>
+                    <div class="option-card" data-val="3" onclick="selectOption(this)"><div class="number-val">3</div><div class="label">Moderada</div></div>
+                    <div class="option-card" data-val="4" onclick="selectOption(this)"><div class="number-val">4</div><div class="label">Bastante</div></div>
+                    <div class="option-card" data-val="5" onclick="selectOption(this)"><div class="number-val">5</div><div class="label">Total confianza</div></div>
+                </div>
+            </div>
+
+            <!-- PREGUNTA 6: RECOMENDACIÓN (NPS) -->
+            <div class="question-block" id="q6-block">
+                <div class="question-header">
+                    <div class="question-number">6</div>
+                    <div>
+                        <div class="question-title">RECOMENDACIÓN (NPS)</div>
+                        <div class="question-subtitle">Del 0 al 10, ¿qué tan probable es que nos recomiendes?</div>
+                    </div>
+                </div>
+                <div class="options-grid-nps">
+                    <div class="option-card" data-val="0" onclick="selectOption(this)"><div class="number-val">0</div></div>
+                    <div class="option-card" data-val="1" onclick="selectOption(this)"><div class="number-val">1</div></div>
+                    <div class="option-card" data-val="2" onclick="selectOption(this)"><div class="number-val">2</div></div>
+                    <div class="option-card" data-val="3" onclick="selectOption(this)"><div class="number-val">3</div></div>
+                    <div class="option-card" data-val="4" onclick="selectOption(this)"><div class="number-val">4</div></div>
+                    <div class="option-card" data-val="5" onclick="selectOption(this)"><div class="number-val">5</div></div>
+                    <div class="option-card" data-val="6" onclick="selectOption(this)"><div class="number-val">6</div></div>
+                    <div class="option-card" data-val="7" onclick="selectOption(this)"><div class="number-val">7</div></div>
+                    <div class="option-card" data-val="8" onclick="selectOption(this)"><div class="number-val">8</div></div>
+                    <div class="option-card" data-val="9" onclick="selectOption(this)"><div class="number-val">9</div></div>
+                    <div class="option-card" data-val="10" onclick="selectOption(this)"><div class="number-val">10</div></div>
+                </div>
+            </div>
+
+            <!-- PREGUNTA 7: MEJORA CLAVE -->
+            <div class="question-block">
+                <div class="question-header">
+                    <div class="question-number">7</div>
+                    <div>
+                        <div class="question-title">UNA MEJORA CLAVE (OPCIONAL)</div>
+                        <div class="question-subtitle">¿Qué cosa mejorarías?</div>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 15px;">
+                    <textarea id="guest-feedback" rows="3" placeholder="Escribe aquí tu sugerencia o comentario breve..."></textarea>
+                </div>
+            </div>
+
+            <div class="action-container">
+                <button type="submit" class="btn-continue">Enviar Encuesta →</button>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- PESTAÑA 2: TABLERO DE RESULTADOS -->
+    <div id="tablero" class="tab-content">
+        <div class="dashboard-card">
+            <h2 style="color: var(--verde-logo); font-family: 'Cormorant Garamond', serif; font-size: 2rem; margin-bottom: 20px;">Tablero de Calidad e Indicadores</h2>
+            
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-value" id="kpi-csat">94%</div>
+                    <div class="kpi-label">Índice CSAT (Satisfacción)</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value" id="kpi-servqual">+4.8</div>
+                    <div class="kpi-label">Brecha SERVQUAL</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value" id="kpi-total">1</div>
+                    <div class="kpi-label">Encuestas Recibidas</div>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <h3 style="margin-bottom: 15px; font-size: 1.1rem; color: var(--verde-logo);">Distribución de Valoraciones CSAT</h3>
+                
+                <div class="bar-group">
+                    <div class="bar-label"><span>Muy Satisfecho (5★)</span><span id="pct-5">100%</span></div>
+                    <div class="bar-track"><div class="bar-fill" id="bar-5" style="width: 100%;"></div></div>
+                </div>
+                
+                <div class="bar-group">
+                    <div class="bar-label"><span>Satisfecho (4★)</span><span id="pct-4">0%</span></div>
+                    <div class="bar-track"><div class="bar-fill" id="bar-4" style="width: 0%;"></div></div>
+                </div>
+
+                <div class="bar-group">
+                    <div class="bar-label"><span>Neutral / Insatisfecho (1-3★)</span><span id="pct-low">0%</span></div>
+                    <div class="bar-track"><div class="bar-fill orange" id="bar-low" style="width: 0%;"></div></div>
+                </div>
+            </div>
+
+            <!-- REGISTRO DE RESPUESTAS PARA ADMINISTRADOR -->
+            <div class="admin-table-container">
+                <h3 style="color: var(--verde-logo); font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; margin-bottom: 10px;">
+                    📋 Registro de Encuestas Recibidas (Vista Administrador)
+                </h3>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Huésped/Familia</th>
+                            <th>Habitación</th>
+                            <th>CSAT</th>
+                            <th>SERVQUAL</th>
+                            <th>NPS</th>
+                            <th>Sugerencia de Mejora</th>
+                        </tr>
+                    </thead>
+                    <tbody id="responses-table-body">
+                        <tr>
+                            <td>Familia Rodríguez</td>
+                            <td>Suite Mirador</td>
+                            <td>5 / 5</td>
+                            <td>5 / 5</td>
+                            <td>10 / 10</td>
+                            <td>Todo excelente durante la estancia.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // URL DE GOOGLE APPS SCRIPT VINCULADA
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz8RUIbVw3rctgPUQnaZIXdkOYRe-FPGf43fxH0JnSRZq5cWcMBEb8jZsfF-1nWDCdM/exec';
+
+    // FOTOS DE LA POSADA
+    const posadaImages = [
+        'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/d4/4c/14/estancia-altos-de-vera.jpg?w=900&h=500&s=1',
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRszrsSIXKmKwaptG3o0JGA9sXE_LQSPvZ319Ku6_6QFV95CYZHAM5UBiI&s=10',
+        'https://paxer.com/static/production/HOI/2/288/13022/hash-U0jN9Ec8pV-paxer.jpg',
+        'https://media-cdn.tripadvisor.com/media/photo-s/13/11/4e/94/estancia-altos-de-vera.jpg'
+    ];
+    let currentImageIndex = 0;
+
+    function changeHeroImage() {
+        currentImageIndex = (currentImageIndex + 1) % posadaImages.length;
+        document.getElementById('hero-banner').style.backgroundImage = `url('${posadaImages[currentImageIndex]}')`;
+    }
+
+    // BASE DE DATOS LOCAL
+    let surveyResponses = [
+        { name: "Familia Rodríguez", room: "Suite Mirador", csat: 5, servqual: 5, nps: 10, feedback: "Todo excelente durante la estancia." }
+    ];
+
+    function switchTab(tabId, element) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        
+        document.getElementById(tabId).classList.add('active');
+        element.classList.add('active');
+    }
+
+    function selectOption(element) {
+        const parent = element.parentElement;
+        parent.querySelectorAll('.option-card').forEach(opt => opt.classList.remove('selected'));
+        element.classList.add('selected');
+    }
+
+    function generateShareCode() {
+        const randomNum = Math.floor(1000 + Math.random() * 9000);
+        const baseUrl = window.location.href.split('#')[0];
+        const shareUrl = `${baseUrl}?code=VERACRUZ-${randomNum}#seccion-encuesta`;
+        
+        document.getElementById('code-display').innerText = shareUrl;
+        const modal = document.getElementById('code-modal');
+        modal.style.display = 'block';
+        modal.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function copyCode() {
+        const codeText = document.getElementById('code-display').innerText;
+        navigator.clipboard.writeText(codeText);
+        alert('¡Enlace copiado al portapapeles!\n\nAl compartirlo con los huéspedes, los llevará directamente a responder la encuesta.');
+    }
+
+    // ENVÍO DE RESPUESTAS A GOOGLE SHEETS Y TABLERO
+    function submitSurvey(event) {
+        event.preventDefault();
+
+        const getSelectedVal = (blockId) => {
+            const selected = document.querySelector(`#${blockId} .option-card.selected`);
+            return selected ? selected.getAttribute('data-val') : 'N/A';
+        };
+
+        const payload = {
+            name: document.getElementById('guest-name').value || 'Huésped Anónimo',
+            reason: document.getElementById('guest-reason').value || 'N/A',
+            room: document.getElementById('guest-room').value || 'Habitación General',
+            csat: getSelectedVal('q1-block'),
+            servqual: getSelectedVal('q2-block'),
+            ctqTime: getSelectedVal('q3-block'),
+            ctqQuality: getSelectedVal('q4-block'),
+            confidence: getSelectedVal('q5-block'),
+            nps: getSelectedVal('q6-block'),
+            feedback: document.getElementById('guest-feedback').value || 'Sin comentarios.'
+        };
+
+        // Enviar a Google Sheets
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify(payload)
+        }).then(() => {
+            // Actualizar interfaz local
+            surveyResponses.push({
+                name: payload.name,
+                room: payload.room,
+                csat: parseInt(payload.csat) || 5,
+                servqual: parseInt(payload.servqual) || 5,
+                nps: parseInt(payload.nps) || 10,
+                feedback: payload.feedback
+            });
+
+            updateDashboard();
+            alert('¡Muchas gracias por completar la encuesta! Tus respuestas han sido registradas exitosamente.');
+
+            const tableroBtn = document.querySelectorAll('.tab-btn')[1];
+            switchTab('tablero', tableroBtn);
+            document.getElementById('seccion-encuesta').reset();
+        }).catch(err => {
+            alert('Ocurrió un error al procesar el envío. Por favor inténtalo nuevamente.');
+            console.error(err);
+        });
+    }
+
+    function updateDashboard() {
+        const total = surveyResponses.length;
+        document.getElementById('kpi-total').innerText = total;
+
+        let sumCsat = 0;
+        let sumServqual = 0;
+        let count5 = 0;
+        let count4 = 0;
+        let countLow = 0;
+
+        surveyResponses.forEach(r => {
+            sumCsat += r.csat;
+            sumServqual += r.servqual;
+            if (r.csat === 5) count5++;
+            else if (r.csat === 4) count4++;
+            else countLow++;
+        });
+
+        const avgCsatPct = Math.round(((sumCsat / (total * 5)) * 100));
+        const avgServqual = (sumServqual / total).toFixed(1);
+
+        document.getElementById('kpi-csat').innerText = avgCsatPct + '%';
+        document.getElementById('kpi-servqual').innerText = '+' + avgServqual;
+
+        const pct5 = Math.round((count5 / total) * 100);
+        const pct4 = Math.round((count4 / total) * 100);
+        const pctLow = Math.round((countLow / total) * 100);
+
+        document.getElementById('pct-5').innerText = pct5 + '%';
+        document.getElementById('bar-5').style.width = pct5 + '%';
+
+        document.getElementById('pct-4').innerText = pct4 + '%';
+        document.getElementById('bar-4').style.width = pct4 + '%';
+
+        document.getElementById('pct-low').innerText = pctLow + '%';
+        document.getElementById('bar-low').style.width = pctLow + '%';
+
+        const tbody = document.getElementById('responses-table-body');
+        tbody.innerHTML = '';
+        surveyResponses.forEach(r => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${r.name}</td>
+                <td>${r.room}</td>
+                <td>${r.csat} / 5</td>
+                <td>${r.servqual} / 5</td>
+                <td>${r.nps} / 10</td>
+                <td>${r.feedback}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+</script>
