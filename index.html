@@ -619,7 +619,7 @@ body {
     <div id="code-modal" class="code-modal">
         <h3>¡Enlace de Encuesta Generado!</h3>
         <p style="font-size: 0.85rem; color: #666;">Comparte este enlace directo con tus huéspedes para llevarlos directamente a completar la encuesta:</p>
-        <div id="code-display" class="code-box">https://estancia-altos-de-veracruz.github.io/#seccion-encuesta</div>
+        <div id="code-display" class="code-box">https://germaurymendoza3-art.github.io/estancia-altos-de-veracruz/#seccion-encuesta</div>
         <button class="btn-continue" onclick="copyCode()">Copiar Enlace al Portapapeles</button>
     </div>
 
@@ -893,8 +893,8 @@ body {
 </div>
 
 <script>
-    // PEGA AQUÍ LA URL GENERADA POR GOOGLE APPS SCRIPT
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx.../exec';
+    // URL DE GOOGLE APPS SCRIPT VINCULADA
+    const SCRIPT_URL = 'hhttps://script.google.com/macros/s/AKfycbxMMKVoV2_pB8k5JW96jzF-Zjm5nICtc_qvPJ5qYgllPsPkYdvfrADE2Ax4KWqJ-y8/exec';
 
     // FOTOS DE LA POSADA
     const posadaImages = [
@@ -946,135 +946,107 @@ body {
         alert('¡Enlace copiado al portapapeles!\n\nAl compartirlo con los huéspedes, los llevará directamente a responder la encuesta.');
     }
 
-  <script>
-    // URL DE GOOGLE APPS SCRIPT ACTUALIZADA
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMMKVoV2_pB8k5JW96jzF-Zjm5nICtc_qvPJ5qYgllPsPkYdvfrADE2Ax4KWqJ-y8/exec';
-
-    // FOTOS DE LA POSADA
-    const posadaImages = [
-        'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/d4/4c/14/estancia-altos-de-vera.jpg?w=900&h=500&s=1',
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRszrsSIXKmKwaptG3o0JGA9sXE_LQSPvZ319Ku6_6QFV95CYZHAM5UBiI&s=10',
-        'https://paxer.com/static/production/HOI/2/288/13022/hash-U0jN9Ec8pV-paxer.jpg',
-        'https://media-cdn.tripadvisor.com/media/photo-s/13/11/4e/94/estancia-altos-de-vera.jpg'
-    ];
-    let currentImageIndex = 0;
-
-    function changeHeroImage() {
-        currentImageIndex = (currentImageIndex + 1) % posadaImages.length;
-        document.getElementById('hero-banner').style.backgroundImage = `url('${posadaImages[currentImageIndex]}')`;
-    }
-
-    // BASE DE DATOS LOCAL Y CAMBIO DE PESTAÑAS
-    let surveyResponses = [
-        { name: "Familia Rodríguez", room: "Suite Mirador", csat: 5, servqual: 5, nps: 10, feedback: "Todo excelente durante la estancia." }
-    ];
-
-    function switchTab(tabId, element) {
-        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        
-        document.getElementById(tabId).classList.add('active');
-        element.classList.add('active');
-    }
-
-    function selectOption(element) {
-        const parent = element.parentElement;
-        parent.querySelectorAll('.option-card').forEach(opt => opt.classList.remove('selected'));
-        element.classList.add('selected');
-    }
-
-    function generateShareCode() {
-        const randomNum = Math.floor(1000 + Math.random() * 9000);
-        const baseUrl = window.location.href.split('#')[0];
-        const shareUrl = `${baseUrl}?code=VERACRUZ-${randomNum}#seccion-encuesta`;
-        
-        document.getElementById('code-display').innerText = shareUrl;
-        const modal = document.getElementById('code-modal');
-        modal.style.display = 'block';
-        modal.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function copyCode() {
-        const codeText = document.getElementById('code-display').innerText;
-        navigator.clipboard.writeText(codeText);
-        alert('¡Enlace copiado al portapapeles!\n\nAl compartirlo con los huéspedes, los llevará directamente a responder la encuesta.');
-    }
-
-    // PROCESAMIENTO Y ENVÍO DEL FORMULARIO
+    // ENVÍO DE RESPUESTAS A GOOGLE SHEETS Y TABLERO
     function submitSurvey(event) {
         event.preventDefault();
 
-        // 1. Obtener valores de las preguntas
-        const q1 = document.querySelector('#q1-block .option-card.selected')?.getAttribute('data-val');
-        const q2 = document.querySelector('#q2-block .option-card.selected')?.getAttribute('data-val');
-        const q3 = document.querySelector('#q3-block .option-card.selected')?.getAttribute('data-val');
-        const q4 = document.querySelector('#q4-block .option-card.selected')?.getAttribute('data-val');
-        const q5 = document.querySelector('#q5-block .option-card.selected')?.getAttribute('data-val');
-        const q6 = document.querySelector('#q6-block .option-card.selected')?.getAttribute('data-val');
-
-        // Validar que se hayan respondido las preguntas clave
-        if (!q1 || !q2 || !q6) {
-            alert('Por favor, selecciona una respuesta para las preguntas de satisfacción antes de enviar.');
-            return;
-        }
-
-        const payload = {
-            name: document.getElementById('guest-name').value || 'Anónimo',
-            reason: document.getElementById('guest-reason').value,
-            room: document.getElementById('guest-room').value || 'General',
-            csat: parseInt(q1),
-            servqual: parseInt(q2),
-            ctq_tiempo: q3 || 'N/A',
-            ctq_calidad: q4 ? parseInt(q4) : 'N/A',
-            confianza: q5 ? parseInt(q5) : 'N/A',
-            nps: parseInt(q6),
-            feedback: document.getElementById('guest-feedback').value || 'Sin comentarios'
+        const getSelectedVal = (blockId) => {
+            const selected = document.querySelector(`#${blockId} .option-card.selected`);
+            return selected ? selected.getAttribute('data-val') : 'N/A';
         };
 
-        // 2. Guardar y actualizar el Dashboard
-        surveyResponses.push(payload);
-        updateDashboard(payload);
+        const payload = {
+            name: document.getElementById('guest-name').value || 'Huésped Anónimo',
+            reason: document.getElementById('guest-reason').value || 'N/A',
+            room: document.getElementById('guest-room').value || 'Habitación General',
+            csat: getSelectedVal('q1-block'),
+            servqual: getSelectedVal('q2-block'),
+            ctqTime: getSelectedVal('q3-block'),
+            ctqQuality: getSelectedVal('q4-block'),
+            confidence: getSelectedVal('q5-block'),
+            nps: getSelectedVal('q6-block'),
+            feedback: document.getElementById('guest-feedback').value || 'Sin comentarios.'
+        };
 
-        // 3. Enviar a Google Sheets vía la nueva App Script URL
+        // Enviar a Google Sheets
         fetch(SCRIPT_URL, {
             method: 'POST',
             mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify(payload)
-        })
-        .then(() => {
-            alert('¡Gracias por tus comentarios! La información ha sido enviada con éxito.');
+        }).then(() => {
+            // Actualizar interfaz local
+            surveyResponses.push({
+                name: payload.name,
+                room: payload.room,
+                csat: parseInt(payload.csat) || 5,
+                servqual: parseInt(payload.servqual) || 5,
+                nps: parseInt(payload.nps) || 10,
+                feedback: payload.feedback
+            });
+
+            updateDashboard();
+            alert('¡Muchas gracias por completar la encuesta! Tus respuestas han sido registradas exitosamente.');
+
+            const tableroBtn = document.querySelectorAll('.tab-btn')[1];
+            switchTab('tablero', tableroBtn);
             document.getElementById('seccion-encuesta').reset();
-            document.querySelectorAll('.option-card').forEach(card => card.classList.remove('selected'));
-        })
-        .catch(error => {
-            console.error('Error al enviar:', error);
-            alert('Hubo un problema de conexión, pero tu respuesta se reflejó localmente en la tabla.');
+        }).catch(err => {
+            alert('Ocurrió un error al procesar el envío. Por favor inténtalo nuevamente.');
+            console.error(err);
         });
     }
 
-    function updateDashboard(data) {
+    function updateDashboard() {
         const total = surveyResponses.length;
-        const sumCSAT = surveyResponses.reduce((acc, r) => acc + r.csat, 0);
-        const sumSERVQUAL = surveyResponses.reduce((acc, r) => acc + r.servqual, 0);
-
-        const csatPct = Math.round((sumCSAT / (total * 5)) * 100);
-        const servqualAvg = (sumSERVQUAL / total).toFixed(1);
-
-        document.getElementById('kpi-csat').innerText = `${csatPct}%`;
-        document.getElementById('kpi-servqual').innerText = `+${servqualAvg}`;
         document.getElementById('kpi-total').innerText = total;
 
-        // Agregar fila a la tabla de administración
+        let sumCsat = 0;
+        let sumServqual = 0;
+        let count5 = 0;
+        let count4 = 0;
+        let countLow = 0;
+
+        surveyResponses.forEach(r => {
+            sumCsat += r.csat;
+            sumServqual += r.servqual;
+            if (r.csat === 5) count5++;
+            else if (r.csat === 4) count4++;
+            else countLow++;
+        });
+
+        const avgCsatPct = Math.round(((sumCsat / (total * 5)) * 100));
+        const avgServqual = (sumServqual / total).toFixed(1);
+
+        document.getElementById('kpi-csat').innerText = avgCsatPct + '%';
+        document.getElementById('kpi-servqual').innerText = '+' + avgServqual;
+
+        const pct5 = Math.round((count5 / total) * 100);
+        const pct4 = Math.round((count4 / total) * 100);
+        const pctLow = Math.round((countLow / total) * 100);
+
+        document.getElementById('pct-5').innerText = pct5 + '%';
+        document.getElementById('bar-5').style.width = pct5 + '%';
+
+        document.getElementById('pct-4').innerText = pct4 + '%';
+        document.getElementById('bar-4').style.width = pct4 + '%';
+
+        document.getElementById('pct-low').innerText = pctLow + '%';
+        document.getElementById('bar-low').style.width = pctLow + '%';
+
         const tbody = document.getElementById('responses-table-body');
-        const newRow = `<tr>
-            <td>${data.name}</td>
-            <td>${data.room}</td>
-            <td>${data.csat} / 5</td>
-            <td>${data.servqual} / 5</td>
-            <td>${data.nps} / 10</td>
-            <td>${data.feedback}</td>
-        </tr>`;
-        tbody.insertAdjacentHTML('afterbegin', newRow);
+        tbody.innerHTML = '';
+        surveyResponses.forEach(r => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${r.name}</td>
+                <td>${r.room}</td>
+                <td>${r.csat} / 5</td>
+                <td>${r.servqual} / 5</td>
+                <td>${r.nps} / 10</td>
+                <td>${r.feedback}</td>
+            `;
+            tbody.appendChild(tr);
+        });
     }
 </script>
