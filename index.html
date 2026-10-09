@@ -142,7 +142,7 @@ body {
     display: block;
 }
 
-/* BANNER PRINCIPAL */
+/* BANNER PRINCIPAL (FACHADA DINÁMICA) */
 .hero-banner {
     position: relative;
     width: 100%;
@@ -310,7 +310,7 @@ body {
     background: #f0f7f3;
     color: var(--verde-logo);
     font-family: monospace;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: bold;
     padding: 10px;
     border-radius: 8px;
@@ -504,7 +504,7 @@ body {
     background-color: #004328;
 }
 
-/* ESTILOS DEL TABLERO Y TABLA */
+/* ESTILOS DEL TABLERO DE RESULTADOS Y TABLA ADMINISTRATIVA */
 .kpi-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -615,20 +615,21 @@ body {
         <button class="tab-btn" onclick="switchTab('tablero', this)">📊 Tablero de Resultados</button>
     </div>
 
-    <!-- MODAL DE ENLACE GENERADO -->
+    <!-- RECUADRO MODAL DE CÓDIGO/ENLACE GENERADO -->
     <div id="code-modal" class="code-modal">
         <h3>¡Enlace de Encuesta Generado!</h3>
         <p style="font-size: 0.85rem; color: #666;">Comparte este enlace directo con tus huéspedes para llevarlos directamente a completar la encuesta:</p>
-        <div id="code-display" class="code-box">https://germaurymendoza3-art.github.io/estancia-altos-de-veracruz/#seccion-encuesta</div>
+        <div id="code-display" class="code-box">https://codepen.io/survey?code=VERACRUZ-8942#seccion-encuesta</div>
         <button class="btn-continue" onclick="copyCode()">Copiar Enlace al Portapapeles</button>
     </div>
 
     <!-- PESTAÑA 1: ENCUESTA DE SATISFACCIÓN -->
     <div id="encuesta" class="tab-content active">
-        <!-- Banner Principal -->
+        <!-- Banner Principal con Foto de Fachada Dinámica -->
         <div class="hero-banner" id="hero-banner">
             <div class="hero-overlay">
                 <div class="hero-top-bar">
+                    <!-- Botón con enlace directo a Google Maps -->
                     <a href="https://www.google.com/maps/place/ESTANCIA+ALTOS+DE+VERACRUZ/@9.7269075,-69.6552944,17z/data=!4m9!3m8!1s0x8e7d9de5f3539631:0x9935ecef96088bac!5m2!4m1!1i2!8m2!3d9.7269075!4d-69.6527195!16s%2Fg%2F11b5wmshgs?entry=ttu" target="_blank" class="location-tag">
                         📍 Sanare · Edo. Lara (Google Maps)
                     </a>
@@ -659,7 +660,7 @@ body {
             </div>
         </div>
 
-        <!-- Formulario de Encuesta -->
+        <!-- Secciones de Encuesta -->
         <form class="survey-card" id="seccion-encuesta" onsubmit="submitSurvey(event)">
             
             <!-- Datos Opcionales -->
@@ -893,10 +894,10 @@ body {
 </div>
 
 <script>
-    // URL DE GOOGLE APPS SCRIPT VINCULADA
-    const SCRIPT_URL = 'hhttps://script.google.com/macros/s/AKfycbxMMKVoV2_pB8k5JW96jzF-Zjm5nICtc_qvPJ5qYgllPsPkYdvfrADE2Ax4KWqJ-y8/exec';
+    // URL DE GOOGLE APPS SCRIPT
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMMKVoV2_pB8k5JW96jzF-Zjm5nICtc_qvPJ5qYgllPsPkYdvfrADE2Ax4KWqJ-y8/exec';
 
-    // FOTOS DE LA POSADA
+    // FOTOS DE LA POSADA PARA EL BANNER
     const posadaImages = [
         'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/d4/4c/14/estancia-altos-de-vera.jpg?w=900&h=500&s=1',
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRszrsSIXKmKwaptG3o0JGA9sXE_LQSPvZ319Ku6_6QFV95CYZHAM5UBiI&s=10',
@@ -911,10 +912,9 @@ body {
     }
 
     // BASE DE DATOS LOCAL
-    let surveyResponses = [
-        { name: "Familia Rodríguez", room: "Suite Mirador", csat: 5, servqual: 5, nps: 10, feedback: "Todo excelente durante la estancia." }
-    ];
+    let surveyResponses = [];
 
+    // CAMBIO DE PESTAÑAS (ENCUESTA / TABLERO)
     function switchTab(tabId, element) {
         document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -923,12 +923,14 @@ body {
         element.classList.add('active');
     }
 
+    // SELECCIÓN DE TARJETAS DE OPCIONES
     function selectOption(element) {
         const parent = element.parentElement;
         parent.querySelectorAll('.option-card').forEach(opt => opt.classList.remove('selected'));
         element.classList.add('selected');
     }
 
+    // GENERAR Y COPIAR CÓDIGO
     function generateShareCode() {
         const randomNum = Math.floor(1000 + Math.random() * 9000);
         const baseUrl = window.location.href.split('#')[0];
@@ -946,107 +948,82 @@ body {
         alert('¡Enlace copiado al portapapeles!\n\nAl compartirlo con los huéspedes, los llevará directamente a responder la encuesta.');
     }
 
-    // ENVÍO DE RESPUESTAS A GOOGLE SHEETS Y TABLERO
+    // ENVÍO DE LA ENCUESTA
     function submitSurvey(event) {
         event.preventDefault();
 
-        const getSelectedVal = (blockId) => {
-            const selected = document.querySelector(`#${blockId} .option-card.selected`);
-            return selected ? selected.getAttribute('data-val') : 'N/A';
-        };
+        // Obtener valores seleccionados de las tarjetas
+        const q1 = document.querySelector('#q1-block .option-card.selected')?.getAttribute('data-val');
+        const q2 = document.querySelector('#q2-block .option-card.selected')?.getAttribute('data-val');
+        const q6 = document.querySelector('#q6-block .option-card.selected')?.getAttribute('data-val');
+
+        if (!q1 || !q2 || !q6) {
+            alert('Por favor, selecciona una opción en las preguntas de calificación antes de enviar.');
+            return;
+        }
 
         const payload = {
-            name: document.getElementById('guest-name').value || 'Huésped Anónimo',
-            reason: document.getElementById('guest-reason').value || 'N/A',
-            room: document.getElementById('guest-room').value || 'Habitación General',
-            csat: getSelectedVal('q1-block'),
-            servqual: getSelectedVal('q2-block'),
-            ctqTime: getSelectedVal('q3-block'),
-            ctqQuality: getSelectedVal('q4-block'),
-            confidence: getSelectedVal('q5-block'),
-            nps: getSelectedVal('q6-block'),
-            feedback: document.getElementById('guest-feedback').value || 'Sin comentarios.'
+            name: document.getElementById('guest-name').value || 'Anónimo',
+            room: document.getElementById('guest-room').value || 'General',
+            csat: parseInt(q1),
+            servqual: parseInt(q2),
+            nps: parseInt(q6),
+            feedback: document.getElementById('guest-feedback').value || 'Sin comentarios'
         };
 
-        // Enviar a Google Sheets
+        // 1. Guardar la respuesta en el arreglo local
+        surveyResponses.push(payload);
+
+        // 2. Actualizar inmediatamente los contadores y la tabla del Tablero
+        updateDashboard(payload);
+
+        // 3. Enviar a Google Sheets vía la URL de Apps Script
         fetch(SCRIPT_URL, {
             method: 'POST',
             mode: 'no-cors',
-            headers: { 'Content-Type': 'text/plain' },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
-        }).then(() => {
-            // Actualizar interfaz local
-            surveyResponses.push({
-                name: payload.name,
-                room: payload.room,
-                csat: parseInt(payload.csat) || 5,
-                servqual: parseInt(payload.servqual) || 5,
-                nps: parseInt(payload.nps) || 10,
-                feedback: payload.feedback
-            });
-
-            updateDashboard();
-            alert('¡Muchas gracias por completar la encuesta! Tus respuestas han sido registradas exitosamente.');
-
-            const tableroBtn = document.querySelectorAll('.tab-btn')[1];
-            switchTab('tablero', tableroBtn);
+        })
+        .then(() => {
+            alert('¡Gracias! Tu encuesta se ha guardado y enviado con éxito.');
             document.getElementById('seccion-encuesta').reset();
-        }).catch(err => {
-            alert('Ocurrió un error al procesar el envío. Por favor inténtalo nuevamente.');
-            console.error(err);
+            document.querySelectorAll('.option-card').forEach(card => card.classList.remove('selected'));
+        })
+        .catch(err => {
+            console.error('Error al enviar:', err);
+            alert('Respuesta registrada en el tablero local.');
         });
     }
 
-    function updateDashboard() {
+    // ACTUALIZACIÓN DINÁMICA DEL TABLERO DE RESULTADOS
+    function updateDashboard(lastData) {
         const total = surveyResponses.length;
+
+        // Actualiza el número de encuestas recibidas
         document.getElementById('kpi-total').innerText = total;
 
-        let sumCsat = 0;
-        let sumServqual = 0;
-        let count5 = 0;
-        let count4 = 0;
-        let countLow = 0;
+        // Calcula porcentajes y promedios
+        const sumCSAT = surveyResponses.reduce((acc, r) => acc + r.csat, 0);
+        const sumSERVQUAL = surveyResponses.reduce((acc, r) => acc + r.servqual, 0);
 
-        surveyResponses.forEach(r => {
-            sumCsat += r.csat;
-            sumServqual += r.servqual;
-            if (r.csat === 5) count5++;
-            else if (r.csat === 4) count4++;
-            else countLow++;
-        });
+        const csatPct = Math.round((sumCSAT / (total * 5)) * 100);
+        const servqualAvg = (sumSERVQUAL / total).toFixed(1);
 
-        const avgCsatPct = Math.round(((sumCsat / (total * 5)) * 100));
-        const avgServqual = (sumServqual / total).toFixed(1);
+        document.getElementById('kpi-csat').innerText = `${csatPct}%`;
+        document.getElementById('kpi-servqual').innerText = `+${servqualAvg}`;
 
-        document.getElementById('kpi-csat').innerText = avgCsatPct + '%';
-        document.getElementById('kpi-servqual').innerText = '+' + avgServqual;
-
-        const pct5 = Math.round((count5 / total) * 100);
-        const pct4 = Math.round((count4 / total) * 100);
-        const pctLow = Math.round((countLow / total) * 100);
-
-        document.getElementById('pct-5').innerText = pct5 + '%';
-        document.getElementById('bar-5').style.width = pct5 + '%';
-
-        document.getElementById('pct-4').innerText = pct4 + '%';
-        document.getElementById('bar-4').style.width = pct4 + '%';
-
-        document.getElementById('pct-low').innerText = pctLow + '%';
-        document.getElementById('bar-low').style.width = pctLow + '%';
-
+        // Agrega la nueva fila a la tabla del Tablero
         const tbody = document.getElementById('responses-table-body');
-        tbody.innerHTML = '';
-        surveyResponses.forEach(r => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${r.name}</td>
-                <td>${r.room}</td>
-                <td>${r.csat} / 5</td>
-                <td>${r.servqual} / 5</td>
-                <td>${r.nps} / 10</td>
-                <td>${r.feedback}</td>
-            `;
-            tbody.appendChild(tr);
-        });
+        if (tbody && lastData) {
+            const row = `<tr>
+                <td>${lastData.name}</td>
+                <td>${lastData.room}</td>
+                <td>${lastData.csat} / 5</td>
+                <td>${lastData.servqual} / 5</td>
+                <td>${lastData.nps} / 10</td>
+                <td>${lastData.feedback}</td>
+            </tr>`;
+            tbody.insertAdjacentHTML('afterbegin', row);
+        }
     }
 </script>
